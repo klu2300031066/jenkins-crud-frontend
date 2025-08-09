@@ -61,125 +61,156 @@ const BASE_URL = 'http://localhost:9090/springapp1';
   }, []);
 
   return (
-    <div className="container mt-4">
-      <div className="form-container">
-        <h2 className="text-center mb-4">{isEditing ? 'Edit Product' : 'Add Product'}</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="form-group row">
-            <label htmlFor="id" className="col-sm-3 col-form-label form-label">ID:</label>
-            <div className="col-sm-9">
+    <div className="container">
+      <div className="page-header">
+        <h1 className="page-title">Product Management</h1>
+        <p className="page-subtitle">Manage your product inventory with ease</p>
+      </div>
+
+      <div className="form-container fade-in">
+        <h2 className="form-title">{isEditing ? 'Edit Product' : 'Add New Product'}</h2>
+        <form className="product-form" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <div className="form-row">
+              <label htmlFor="id" className="form-label">ID:</label>
               <input
                 type="number"
                 name="id"
                 id="id"
-                className="form-control"
+                className="form-input"
                 value={product.id}
                 onChange={handleChange}
                 required
                 disabled={isEditing}
+                placeholder="Enter product ID"
               />
             </div>
           </div>
-          <div className="form-group row">
-            <label htmlFor="name" className="col-sm-3 col-form-label form-label">Name:</label>
-            <div className="col-sm-9">
+          
+          <div className="form-group">
+            <div className="form-row">
+              <label htmlFor="name" className="form-label">Name:</label>
               <input
                 type="text"
                 name="name"
                 id="name"
-                className="form-control"
+                className="form-input"
                 value={product.name}
                 onChange={handleChange}
                 required
+                placeholder="Enter product name"
               />
             </div>
           </div>
-          <div className="form-group row">
-            <label htmlFor="os" className="col-sm-3 col-form-label form-label">OS:</label>
-            <div className="col-sm-9">
+          
+          <div className="form-group">
+            <div className="form-row">
+              <label htmlFor="os" className="form-label">OS:</label>
               <input
                 type="text"
                 name="os"
                 id="os"
-                className="form-control"
+                className="form-input"
                 value={product.os}
                 onChange={handleChange}
                 required
+                placeholder="Enter operating system"
               />
             </div>
           </div>
-          <div className="form-group row">
-            <label htmlFor="price" className="col-sm-3 col-form-label form-label">Price:</label>
-            <div className="col-sm-9">
+          
+          <div className="form-group">
+            <div className="form-row">
+              <label htmlFor="price" className="form-label">Price:</label>
               <input
                 type="text"
                 name="price"
                 id="price"
-                className="form-control"
+                className="form-input"
                 value={product.price}
                 onChange={handleChange}
                 required
+                placeholder="Enter price (e.g., $99.99)"
               />
             </div>
           </div>
-          <div className="text-center mt-3">
+          
+          <div className="btn-group">
             <button type="submit" className="btn btn-primary">
-              {isEditing ? 'Update' : 'Insert'}
+              {isEditing ? '✏️ Update Product' : '➕ Add Product'}
             </button>
             {isEditing && (
               <button
                 type="button"
-                className="btn btn-secondary ms-2"
+                className="btn btn-secondary"
                 onClick={() => {
                   setIsEditing(false);
                   setProduct({ id: '', name: '', os: '', price: '' });
                 }}
               >
-                Cancel
+                ❌ Cancel
               </button>
             )}
           </div>
         </form>
       </div>
 
-      <h3 className="text-center">Product List</h3>
-      <table className="table table-bordered table-striped mt-3">
-        <thead className="table-dark">
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>OS</th>
-            <th>Price</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map((p) => (
-            <tr key={p.id}>
-              <td>{p.id}</td>
-              <td>{p.name}</td>
-              <td>{p.os}</td>
-              <td>{p.price}</td>
-              <td className="actions-cell">
-                <button
-                  className="btn btn-warning btn-sm"
-                  onClick={() => editProduct(p)}
-                >
-                  Edit
-                </button>
-                {/*
-                <button
-                  className="btn btn-danger btn-sm"
-                  onClick={() => deleteProduct(p.id)}
-                >
-                  Delete
-                </button>
-                */}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="table-container fade-in">
+        <div className="table-header">
+          <h3 className="table-title">Product Inventory</h3>
+          <span className="table-count">{products.length} Products</span>
+        </div>
+        
+        {products.length === 0 ? (
+          <div className="empty-state">
+            <div className="empty-state-icon">📦</div>
+            <h4 className="empty-state-title">No Products Found</h4>
+            <p className="empty-state-description">
+              Start by adding your first product using the form above.
+            </p>
+          </div>
+        ) : (
+          <table className="product-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Product Name</th>
+                <th>Operating System</th>
+                <th>Price</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {products.map((p) => (
+                <tr key={p.id}>
+                  <td><strong>#{p.id}</strong></td>
+                  <td>{p.name}</td>
+                  <td>{p.os}</td>
+                  <td><strong>{p.price}</strong></td>
+                  <td className="actions-cell">
+                    <button
+                      className="btn btn-warning"
+                      onClick={() => editProduct(p)}
+                      title="Edit this product"
+                    >
+                      ✏️ Edit
+                    </button>
+                    {/*
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => deleteProduct(p.id)}
+                      title="Delete this product"
+                    >
+                      🗑️ Delete
+                    </button>
+                    */}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
     </div>
   );
 }
